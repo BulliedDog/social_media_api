@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SocialHub - Social Media Platform</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <div class="header-left">
+                <h1 class="logo">SocialHub</h1>
+                <div class="search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" placeholder="Search..." class="search-input">
+                </div>
+            </div>
+            
+            <nav class="header-nav">
+                <button class="nav-btn active">
+                    <i class="fas fa-home"></i>
+                </button>
+                <button class="nav-btn">
+                    <i class="fas fa-users"></i>
+                </button>
+                <button class="nav-btn">
+                    <i class="fas fa-bell"></i>
+                </button>
+                <button class="nav-btn">
+                    <i class="fas fa-comment"></i>
+                </button>
+                <div class="avatar">
+                    <img src="/placeholder.svg?height=32&width=32" alt="Profile" class="avatar-img">
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <!-- Left Sidebar -->
+        <aside class="left-sidebar">
+            <div class="card">
+                <div class="profile-section">
+                    <div class="avatar large">
+                        <img src="/placeholder.svg?height=48&width=48" alt="Profile" class="avatar-img">
+                    </div>
+                    <div class="profile-info">
+                        <h3>John Doe</h3>
+                        <p class="username">@johndoe</p>
+                    </div>
+                </div>
+
+                <div class="stats">
+                    <div class="stat">
+                        <span>Following</span>
+                        <span class="stat-number">1,234</span>
+                    </div>
+                    <div class="stat">
+                        <span>Followers</span>
+                        <span class="stat-number">5,678</span>
+                    </div>
+                </div>
+
+                <div class="separator"></div>
+
+                <nav class="sidebar-nav">
+                    <button class="sidebar-btn">
+                        <i class="fas fa-user"></i>
+                        Profile
+                    </button>
+                    <button class="sidebar-btn">
+                        <i class="fas fa-bookmark"></i>
+                        Saved Posts
+                    </button>
+                    <button class="sidebar-btn">
+                        <i class="fas fa-chart-line"></i>
+                        Trending
+                    </button>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Stories -->
+            <div class="card">
+                <div class="stories-container">
+                    <div class="story add-story">
+                        <div class="avatar story-avatar">
+                            <img src="/placeholder.svg?height=64&width=64" alt="Your story" class="avatar-img">
+                            <button class="add-story-btn">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                        <span class="story-label">Your Story</span>
+                    </div>
+                    
+                    <div class="story">
+                        <div class="avatar story-avatar">
+                            <img src="/placeholder.svg?height=64&width=64" alt="User 1" class="avatar-img">
+                        </div>
+                        <span class="story-label">User 1</span>
+                    </div>
+                    
+                    <div class="story">
+                        <div class="avatar story-avatar">
+                            <img src="/placeholder.svg?height=64&width=64" alt="User 2" class="avatar-img">
+                        </div>
+                        <span class="story-label">User 2</span>
+                    </div>
+                    
+                    <div class="story">
+                        <div class="avatar story-avatar">
+                            <img src="/placeholder.svg?height=64&width=64" alt="User 3" class="avatar-img">
+                        </div>
+                        <span class="story-label">User 3</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Create Post -->
+            <div class="card">
+                <div class="create-post">
+                    <div class="avatar">
+                        <img src="/placeholder.svg?height=40&width=40" alt="Profile" class="avatar-img">
+                    </div>
+                    <div class="create-post-content">
+                        <input type="text" placeholder="What's on your mind?" class="post-input">
+                        <div class="create-post-actions">
+                            <div class="post-options">
+                                <button class="post-option-btn">Photo</button>
+                                <button class="post-option-btn">Video</button>
+                            </div>
+                            <button class="post-btn">Post</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Posts Feed -->
+            <div class="posts-feed">
+                <article class="card post">
+                    <header class="post-header">
+                        <div class="post-user">
+                            <div class="avatar">
+                                <img src="/placeholder.svg?height=40&width=40" alt="User 1" class="avatar-img">
+                            </div>
+                            <div class="post-user-info">
+                                <h4>User 1</h4>
+                                <p class="post-time">2 hours ago</p>
+                            </div>
+                        </div>
+                        <button class="post-menu-btn">
+                            <i class="fas fa-ellipsis-h"></i>
+                        </button>
+                    </header>
+
+                    <div class="post-content">
+                        <p>Just had an amazing day exploring the city! The weather was perfect and I discovered some incredible street art. Can't wait to share more photos from this adventure! 🌟 #citylife #streetart</p>
+                        <img src="/placeholder.svg?height=300&width=500" alt="Post image" class="post-image">
+                    </div>
+
+                    <footer class="post-actions">
+                        <div class="action-buttons">
+                            <button class="action-btn like-btn" data-likes="124">
+                                <i class="far fa-heart"></i>
+                                <span class="action-count">124</span>
+                            </button>
+                            <button class="action-btn">
+                                <i class="far fa-comment"></i>
+                                <span class="action-count">23</span>
+                            </button>
+                            <button class="action-btn">
+                                <i class="fas fa-share"></i>
+                                <span class="action-count">12</span>
+                            </button>
+                        </div>
+                        <button class="bookmark-btn">
+                            <i class="far fa-bookmark"></i>
+                        </button>
+                    </footer>
+                </article>
+
+                <article class="card post">
+                    <header class="post-header">
+                        <div class="post-user">
+                            <div class="avatar">
+                                <img src="/placeholder.svg?height=40&width=40" alt="User 2" class="avatar-img">
+                            </div>
+                            <div class="post-user-info">
+                                <h4>User 2</h4>
+                                <p class="post-time">4 hours ago</p>
+                            </div>
+                        </div>
+                        <button class="post-menu-btn">
+                            <i class="fas fa-ellipsis-h"></i>
+                        </button>
+                    </header>
+
+                    <div class="post-content">
+                        <p>Beautiful sunset from my balcony tonight! Nature never fails to amaze me. 🌅 #sunset #nature #peaceful</p>
+                        <img src="/placeholder.svg?height=300&width=500" alt="Post image" class="post-image">
+                    </div>
+
+                    <footer class="post-actions">
+                        <div class="action-buttons">
+                            <button class="action-btn like-btn" data-likes="89">
+                                <i class="far fa-heart"></i>
+                                <span class="action-count">89</span>
+                            </button>
+                            <button class="action-btn">
+                                <i class="far fa-comment"></i>
+                                <span class="action-count">15</span>
+                            </button>
+                            <button class="action-btn">
+                                <i class="fas fa-share"></i>
+                                <span class="action-count">8</span>
+                            </button>
+                        </div>
+                        <button class="bookmark-btn">
+                            <i class="far fa-bookmark"></i>
+                        </button>
+                    </footer>
+                </article>
+
+                <article class="card post">
+                    <header class="post-header">
+                        <div class="post-user">
+                            <div class="avatar">
+                                <img src="/placeholder.svg?height=40&width=40" alt="User 3" class="avatar-img">
+                            </div>
+                            <div class="post-user-info">
+                                <h4>User 3</h4>
+                                <p class="post-time">6 hours ago</p>
+                            </div>
+                        </div>
+                        <button class="post-menu-btn">
+                            <i class="fas fa-ellipsis-h"></i>
+                        </button>
+                    </header>
+
+                    <div class="post-content">
+                        <p>Working on a new project today! Excited to share the progress with everyone soon. Stay tuned! 💻 #coding #project #excited</p>
+                        <img src="/placeholder.svg?height=300&width=500" alt="Post image" class="post-image">
+                    </div>
+
+                    <footer class="post-actions">
+                        <div class="action-buttons">
+                            <button class="action-btn like-btn" data-likes="156">
+                                <i class="far fa-heart"></i>
+                                <span class="action-count">156</span>
+                            </button>
+                            <button class="action-btn">
+                                <i class="far fa-comment"></i>
+                                <span class="action-count">32</span>
+                            </button>
+                            <button class="action-btn">
+                                <i class="fas fa-share"></i>
+                                <span class="action-count">18</span>
+                            </button>
+                        </div>
+                        <button class="bookmark-btn">
+                            <i class="far fa-bookmark"></i>
+                        </button>
+                    </footer>
+                </article>
+            </div>
+        </main>
+
+        <!-- Right Sidebar -->
+        <aside class="right-sidebar">
+            <!-- Trending -->
+            <div class="card">
+                <h3 class="card-title">Trending Now</h3>
+                <div class="trending-list">
+                    <div class="trending-item">
+                        <div class="trending-info">
+                            <p class="trending-tag">#TechNews</p>
+                            <p class="trending-posts">42K posts</p>
+                        </div>
+                        <i class="fas fa-chart-line trending-icon"></i>
+                    </div>
+                    <div class="trending-item">
+                        <div class="trending-info">
+                            <p class="trending-tag">#Photography</p>
+                            <p class="trending-posts">28K posts</p>
+                        </div>
+                        <i class="fas fa-chart-line trending-icon"></i>
+                    </div>
+                    <div class="trending-item">
+                        <div class="trending-info">
+                            <p class="trending-tag">#Travel</p>
+                            <p class="trending-posts">35K posts</p>
+                        </div>
+                        <i class="fas fa-chart-line trending-icon"></i>
+                    </div>
+                    <div class="trending-item">
+                        <div class="trending-info">
+                            <p class="trending-tag">#FoodieLife</p>
+                            <p class="trending-posts">19K posts</p>
+                        </div>
+                        <i class="fas fa-chart-line trending-icon"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Suggested Friends -->
+            <div class="card">
+                <h3 class="card-title">People You May Know</h3>
+                <div class="suggestions-list">
+                    <div class="suggestion-item">
+                        <div class="suggestion-user">
+                            <div class="avatar">
+                                <img src="/placeholder.svg?height=40&width=40" alt="Friend 1" class="avatar-img">
+                            </div>
+                            <div class="suggestion-info">
+                                <p class="suggestion-name">Friend 1</p>
+                                <p class="suggestion-mutual">2 mutual friends</p>
+                            </div>
+                        </div>
+                        <button class="follow-btn">Follow</button>
+                    </div>
+                    <div class="suggestion-item">
+                        <div class="suggestion-user">
+                            <div class="avatar">
+                                <img src="/placeholder.svg?height=40&width=40" alt="Friend 2" class="avatar-img">
+                            </div>
+                            <div class="suggestion-info">
+                                <p class="suggestion-name">Friend 2</p>
+                                <p class="suggestion-mutual">3 mutual friends</p>
+                            </div>
+                        </div>
+                        <button class="follow-btn">Follow</button>
+                    </div>
+                    <div class="suggestion-item">
+                        <div class="suggestion-user">
+                            <div class="avatar">
+                                <img src="/placeholder.svg?height=40&width=40" alt="Friend 3" class="avatar-img">
+                            </div>
+                            <div class="suggestion-info">
+                                <p class="suggestion-name">Friend 3</p>
+                                <p class="suggestion-mutual">1 mutual friend</p>
+                            </div>
+                        </div>
+                        <button class="follow-btn">Follow</button>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
