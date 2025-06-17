@@ -5,7 +5,7 @@ from django.conf import settings
 class CustomUser(AbstractUser):
     bio = models.TextField(blank=True)
     profile_image = models.ImageField(upload_to='profile_pics/', null=True, blank=True)
-    friends = models.ManyToManyField('self', blank=True, symmetrical=True)
+    friends = models.ManyToManyField('self', blank=True, symmetrical=True,related_name='friends')
     class Meta:
         ordering = ['username']
         managed = True
@@ -19,7 +19,7 @@ class Post(models.Model):
     title=models.CharField(blank=False,null=False,max_length=200)
     description=models.CharField(blank=True,max_length=1000)
     author=models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
-    likes=models.IntegerField(default=0)
+    likes = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='liked_posts', blank=True)
     image=models.ImageField(upload_to='post_pics/',null=True,blank=True)
     date_published=models.DateTimeField("date published", auto_now_add=True)
     class Meta:
