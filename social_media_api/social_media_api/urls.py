@@ -25,6 +25,6 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('polls/',include('polls.urls')),
     path('social/',include('social.urls')),
-    path('api',include('api.urls')),
+    path('api/',include('api.urls')),
     path('',RedirectView.as_view(url='social/',permanent=True)), #rimanda a social/
 ]

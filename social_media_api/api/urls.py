@@ -1,8 +1,9 @@
-from django.shortcuts import get_object_or_404
-from django.urls import include,path
-from .views import *
-app_name="api"
-urlpatterns=[
-    path('users/',UserListView.as_view(),name='users'),
-    path('profile/',ProfileView.as_view(),name='profile'),
-]
+from rest_framework.routers import DefaultRouter
+from .views import UserViewSet, PostViewSet, CommentViewSet
+
+router = DefaultRouter()
+router.register(r'users', UserViewSet)
+router.register(r'posts', PostViewSet)
+router.register(r'comments', CommentViewSet)
+
+urlpatterns = router.urls

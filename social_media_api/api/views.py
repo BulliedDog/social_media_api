@@ -1,14 +1,15 @@
-from rest_framework import generics
-from social.models import CustomUser
-from .serializers import UserSerializer
-from rest_framework.permissions import IsAuthenticated
+from rest_framework import viewsets
+from social.models import CustomUser, Post, Comment
+from .serializers import UserSerializer, PostSerializer, CommentSerializer
 
-class ProfileView(generics.RetrieveAPIView):
+class UserViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [IsAuthenticated]
 
-class UserListView(generics.ListAPIView):
-    queryset = CustomUser.objects.all()
-    serializer_class = UserSerializer
-    permission_classes = [IsAuthenticated]
+class PostViewSet(viewsets.ModelViewSet):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+
+class CommentViewSet(viewsets.ModelViewSet):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
