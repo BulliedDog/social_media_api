@@ -1,4 +1,5 @@
 {%load static%}
+{%load humanize%}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -143,7 +144,50 @@
 
             <!-- Posts Feed -->
             <div class="posts-feed">
-                
+                <div class="posts-feed">
+                    {% for post in posts %}
+                    <article class="card post">
+                        <header class="post-header">
+                            <div class="post-user">
+                                <div class="avatar">
+                                    <img src="{{post.author.profile_image}}" alt="{{ post.author.username }}" class="avatar-img">
+                                </div>
+                                <div class="post-user-info">
+                                    <h4>{{ post.author.username }}</h4>
+                                    <p class="post-time">{{ post.date_published|naturaltime }}</p>
+                                </div>
+                            </div>
+                        </header>
+
+                        <div class="post-content">
+                            <p>{{ post.title }}</p>
+                            {% if post.image %}
+                                <img src="{{ post.image.url }}" alt="Post image" class="post-image">
+                            {% endif %}
+                            <p>{{ post.description }}</p>
+                        </div>
+
+                        <footer class="post-actions">
+                            <div class="action-buttons">
+                                <button class="action-btn like-btn">
+                                    <i class="far fa-heart"></i>
+                                    <span class="action-count">{{ post.likes.count }}</span>
+                                </button>
+                                <button class="action-btn">
+                                    <i class="far fa-comment"></i>
+                                    <span class="action-count">{{ post.comments.count }}</span>
+                                </button>
+                            </div>
+                            <button class="bookmark-btn">
+                                <i class="far fa-bookmark"></i>
+                            </button>
+                        </footer>
+                    </article>
+                    {% empty %}
+                        <p>No posts found.</p>
+                    {% endfor %}
+                </div>
+
             </div>
         </main>
 
