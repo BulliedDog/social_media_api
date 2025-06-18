@@ -28,3 +28,6 @@ urlpatterns = [
     path('api/',include('api.urls')),
     path('',RedirectView.as_view(url='social/',permanent=True)), #rimanda a social/
 ]
+#per testare caricamento di file statici come le immagini dei post
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
