@@ -5,6 +5,14 @@ const followButtons = document.querySelectorAll(".follow-btn")
 const postButton = document.querySelector(".post-btn")
 const postInput = document.querySelector(".post-input")
 
+document.addEventListener("DOMContentLoaded", () => {
+  const logoutBtn = document.getElementById("logout-btn")
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", logout)
+    logout()
+  }
+})
+
 // Like functionality
 likeButtons.forEach((button) => {
   button.addEventListener("click", function () {
@@ -176,7 +184,6 @@ function createPostElement(text) {
 // Add event listeners to new posts
 function addPostEventListeners(postElement) {
   const likeBtn = postElement.querySelector(".like-btn")
-  const bookmarkBtn = postElement.querySelector(".bookmark-btn")
 
   // Like functionality
   likeBtn.addEventListener("click", function () {
@@ -227,26 +234,6 @@ function addPostEventListeners(postElement) {
     }
   })
 }
-
-// Smooth scrolling for stories
-const storiesContainer = document.querySelector(".stories-container")
-if (storiesContainer) {
-  let isScrolling = false
-
-  storiesContainer.addEventListener("wheel", function (e) {
-    if (!isScrolling) {
-      isScrolling = true
-      e.preventDefault()
-
-      this.scrollLeft += e.deltaY
-
-      setTimeout(() => {
-        isScrolling = false
-      }, 50)
-    }
-  })
-}
-
 // Add loading animation for images
 document.querySelectorAll("img").forEach((img) => {
   img.addEventListener("load", function () {
@@ -285,3 +272,8 @@ document.addEventListener("DOMContentLoaded", () => {
     })
   }, 100)
 })
+
+const token = localStorage.getItem('accessToken')
+if (!token) {
+  window.location.href = 'social/login'
+}
