@@ -1,3 +1,5 @@
+import requests
+from django.db.models import Q
 from django.shortcuts import render,get_object_or_404,get_list_or_404
 from django.http import request
 from .models import *
@@ -5,5 +7,16 @@ from .models import *
 
 def home(request):
     posts=Post.objects.all().order_by('-date_published')
-    context={"posts":posts}
+    suggested_users=suggested_users(request.username)
+    context={"posts":posts,"users":users}
     return render(request, 'social/home.html',context)
+
+
+def suggested_users(current_user):
+    friends = current_user.friends.all()
+
+    followed_by_friends = CustomUser.objects.filter(friends__in=friends).exclude(
+        Q(id=current_user.id) | Q(id__in=friends)
+    ).distinct()[:5]
+
+    return followed_by_friends
