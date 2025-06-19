@@ -1,5 +1,5 @@
 // DOM Elements
-const loginCard = document.getElementById("loginCard")
+const loginCard = document.querySelector(".login-card")
 const signupCard = document.getElementById("signupCard")
 const loginForm = document.getElementById("loginForm")
 const signupForm = document.getElementById("signupForm")
@@ -11,36 +11,65 @@ const loginBtn = document.getElementById("loginBtn")
 const signupBtn = document.getElementById("signupBtn")
 const successMessage = document.getElementById("successMessage")
 
-// Form switching
-signupLink.addEventListener("click", (e) => {
-  e.preventDefault()
-  switchToSignup()
-})
+// Form switching - Fixed version
+if (signupLink) {
+  signupLink.addEventListener("click", (e) => {
+    e.preventDefault()
+    console.log("Signup link clicked") // Debug log
+    switchToSignup()
+  })
+}
 
-signinLink.addEventListener("click", (e) => {
-  e.preventDefault()
-  switchToLogin()
-})
+if (signinLink) {
+  signinLink.addEventListener("click", (e) => {
+    e.preventDefault()
+    console.log("Signin link clicked") // Debug log
+    switchToLogin()
+  })
+}
 
 function switchToSignup() {
-  document.querySelector(".login-card").classList.add("fade-out")
+  console.log("Switching to signup") // Debug log
+  if (loginCard && signupCard) {
+    loginCard.style.opacity = "0"
+    loginCard.style.transform = "translateX(-20px)"
 
-  setTimeout(() => {
-    document.querySelector(".login-card").style.display = "none"
-    signupCard.style.display = "block"
-    signupCard.classList.add("fade-in")
-  }, 300)
+    setTimeout(() => {
+      loginCard.style.display = "none"
+      signupCard.style.display = "block"
+      signupCard.style.opacity = "0"
+      signupCard.style.transform = "translateX(20px)"
+
+      // Force reflow
+      signupCard.offsetHeight
+
+      signupCard.style.transition = "all 0.3s ease"
+      signupCard.style.opacity = "1"
+      signupCard.style.transform = "translateX(0)"
+    }, 300)
+  }
 }
 
 function switchToLogin() {
-  signupCard.classList.add("fade-out")
+  console.log("Switching to login") // Debug log
+  if (loginCard && signupCard) {
+    signupCard.style.opacity = "0"
+    signupCard.style.transform = "translateX(20px)"
 
-  setTimeout(() => {
-    signupCard.style.display = "none"
-    document.querySelector(".login-card").style.display = "block"
-    document.querySelector(".login-card").classList.remove("fade-out")
-    document.querySelector(".login-card").classList.add("fade-in")
-  }, 300)
+    setTimeout(() => {
+      signupCard.style.display = "none"
+      loginCard.style.display = "block"
+      loginCard.style.opacity = "0"
+      loginCard.style.transform = "translateX(-20px)"
+
+      // Force reflow
+      loginCard.offsetHeight
+
+      loginCard.style.transition = "all 0.3s ease"
+      loginCard.style.opacity = "1"
+      loginCard.style.transform = "translateX(0)"
+    }, 300)
+  }
 }
 
 // Password toggle functionality
@@ -84,6 +113,10 @@ function validatePassword(password) {
   return password.length >= 6
 }
 
+function validateUsername(username) {
+  return username.length >= 3 && /^[a-zA-Z0-9_]+$/.test(username)
+}
+
 function showError(input, message) {
   input.classList.add("error")
   input.classList.remove("success")
@@ -121,12 +154,17 @@ function clearValidation(input) {
 }
 
 // Real-time validation
-document.getElementById("email").addEventListener("blur", function () {
-  if (this.value && !validateEmail(this.value) && !this.value.includes("@")) {
-    // If it doesn't contain @, treat as username (valid)
+document.getElementById("username").addEventListener("blur", function () {
+  if (this.value && !validateUsername(this.value)) {
+    showError(this, "Username must be at least 3 characters and contain only letters, numbers, and underscores")
+  } else if (this.value) {
     showSuccess(this)
-  } else if (this.value && this.value.includes("@") && !validateEmail(this.value)) {
-    showError(this, "Please enter a valid email address")
+  }
+})
+
+document.getElementById("signupUsername").addEventListener("blur", function () {
+  if (this.value && !validateUsername(this.value)) {
+    showError(this, "Username must be at least 3 characters and contain only letters, numbers, and underscores")
   } else if (this.value) {
     showSuccess(this)
   }
@@ -161,14 +199,18 @@ document.getElementById("confirmPassword").addEventListener("blur", function () 
 loginForm.addEventListener("submit", async (e) => {
   e.preventDefault()
 
-  const email = document.getElementById("email").value
+  const username = document.getElementById("username").value
   const password = document.getElementById("password").value
-  const rememberMe = document.getElementById("rememberMe").checked
 
   // Basic validation
-  if (!email || !password) {
-    if (!email) showError(document.getElementById("email"), "Email or username is required")
+  if (!username || !password) {
+    if (!username) showError(document.getElementById("username"), "Username is required")
     if (!password) showError(document.getElementById("password"), "Password is required")
+    return
+  }
+
+  if (!validateUsername(username)) {
+    showError(document.getElementById("username"), "Please enter a valid username")
     return
   }
 
@@ -177,7 +219,7 @@ loginForm.addEventListener("submit", async (e) => {
 
   try {
     // Simulate API call
-    await simulateLogin(email, password, rememberMe)
+    await simulateLogin(username, password)
 
     // Show success message
     showSuccessMessage()
@@ -187,7 +229,7 @@ loginForm.addEventListener("submit", async (e) => {
       window.location.href = "index.html" // Redirect to main page
     }, 2000)
   } catch (error) {
-    showError(document.getElementById("password"), "Invalid email/username or password")
+    showError(document.getElementById("password"), "Invalid username or password")
     setLoadingState(loginBtn, false)
   }
 })
@@ -196,34 +238,25 @@ loginForm.addEventListener("submit", async (e) => {
 signupForm.addEventListener("submit", async (e) => {
   e.preventDefault()
 
-  const firstName = document.getElementById("firstName").value
-  const lastName = document.getElementById("lastName").value
+  const username = document.getElementById("signupUsername").value
   const email = document.getElementById("signupEmail").value
-  const username = document.getElementById("username").value
   const password = document.getElementById("signupPassword").value
   const confirmPassword = document.getElementById("confirmPassword").value
-  const agreeTerms = document.getElementById("agreeTerms").checked
+  const bio = document.getElementById("bio").value
 
   // Validation
   let isValid = true
 
-  if (!firstName) {
-    showError(document.getElementById("firstName"), "First name is required")
-    isValid = false
-  }
-
-  if (!lastName) {
-    showError(document.getElementById("lastName"), "Last name is required")
+  if (!username || !validateUsername(username)) {
+    showError(
+      document.getElementById("signupUsername"),
+      "Username must be at least 3 characters and contain only letters, numbers, and underscores",
+    )
     isValid = false
   }
 
   if (!email || !validateEmail(email)) {
     showError(document.getElementById("signupEmail"), "Please enter a valid email address")
-    isValid = false
-  }
-
-  if (!username) {
-    showError(document.getElementById("username"), "Username is required")
     isValid = false
   }
 
@@ -237,11 +270,6 @@ signupForm.addEventListener("submit", async (e) => {
     isValid = false
   }
 
-  if (!agreeTerms) {
-    alert("Please agree to the Terms of Service and Privacy Policy")
-    isValid = false
-  }
-
   if (!isValid) return
 
   // Show loading state
@@ -249,7 +277,7 @@ signupForm.addEventListener("submit", async (e) => {
 
   try {
     // Simulate API call
-    await simulateSignup(firstName, lastName, email, username, password)
+    await simulateSignup(username, email, password, bio)
 
     // Show success message
     showSuccessMessage("Account created successfully!")
@@ -259,7 +287,7 @@ signupForm.addEventListener("submit", async (e) => {
       window.location.href = "index.html" // Redirect to main page
     }, 2000)
   } catch (error) {
-    showError(document.getElementById("signupEmail"), "Email or username already exists")
+    showError(document.getElementById("signupUsername"), "Username or email already exists")
     setLoadingState(signupBtn, false)
   }
 })
@@ -287,18 +315,17 @@ function showSuccessMessage(message = "Welcome to SocialHub!") {
 }
 
 // Simulate API calls
-async function simulateLogin(email, password, rememberMe) {
+async function simulateLogin(username, password) {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       // Simulate successful login for demo purposes
-      if (email && password) {
+      if (username && password) {
         // Store user data in localStorage for demo
         localStorage.setItem(
           "user",
           JSON.stringify({
-            email: email,
-            name: "John Doe",
-            rememberMe: rememberMe,
+            username: username,
+            name: username,
           }),
         )
         resolve()
@@ -309,31 +336,23 @@ async function simulateLogin(email, password, rememberMe) {
   })
 }
 
-async function simulateSignup(firstName, lastName, email, username, password) {
+async function simulateSignup(username, email, password, bio) {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       // Simulate successful signup for demo purposes
       localStorage.setItem(
         "user",
         JSON.stringify({
-          email: email,
-          name: `${firstName} ${lastName}`,
           username: username,
+          email: email,
+          name: username,
+          bio: bio,
         }),
       )
       resolve()
     }, 2000)
   })
 }
-
-// Social login handlers
-document.querySelector(".google-btn").addEventListener("click", () => {
-  alert("Google login would be implemented here")
-})
-
-document.querySelector(".facebook-btn").addEventListener("click", () => {
-  alert("Facebook login would be implemented here")
-})
 
 // Initialize page
 document.addEventListener("DOMContentLoaded", () => {
@@ -347,7 +366,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Add input focus animations
-  const inputs = document.querySelectorAll(".form-input")
+  const inputs = document.querySelectorAll(".form-input, .form-textarea")
   inputs.forEach((input) => {
     input.addEventListener("focus", function () {
       this.parentNode.style.transform = "scale(1.02)"
@@ -362,7 +381,7 @@ document.addEventListener("DOMContentLoaded", () => {
 // Handle form reset
 function resetForm(form) {
   form.reset()
-  const inputs = form.querySelectorAll(".form-input")
+  const inputs = form.querySelectorAll(".form-input, .form-textarea")
   inputs.forEach((input) => {
     clearValidation(input)
   })
@@ -371,58 +390,18 @@ function resetForm(form) {
 // Keyboard shortcuts
 document.addEventListener("keydown", (e) => {
   // Enter key to submit forms
-  if (e.key === "Enter" && e.target.classList.contains("form-input")) {
+  if (
+    e.key === "Enter" &&
+    (e.target.classList.contains("form-input") || e.target.classList.contains("form-textarea"))
+  ) {
+    // Don't submit on textarea enter, allow new lines
+    if (e.target.classList.contains("form-textarea")) {
+      return
+    }
+
     const form = e.target.closest("form")
     if (form) {
       form.dispatchEvent(new Event("submit"))
     }
   }
 })
-
-document.addEventListener("DOMContentLoaded", function () {
-    const loginForm = document.getElementById("loginForm");
-
-    loginForm.addEventListener("submit", async function (e) {
-        e.preventDefault(); // stop the form from refreshing the page
-
-        const emailOrUsername = document.getElementById("email").value;
-        const password = document.getElementById("password").value;
-
-        try {
-            const response = await fetch("http://localhost:8000/api/token/", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    username: emailOrUsername,
-                    password: password
-                })
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                alert("Login failed: " + (errorData.detail || "Invalid credentials."));
-                return;
-            }
-
-            const data = await response.json();
-
-            // Save tokens in localStorage or sessionStorage
-            localStorage.setItem("access", data.access);
-            localStorage.setItem("refresh", data.refresh);
-
-            // Optionally show success message
-            document.getElementById("successMessage").style.display = "flex";
-
-            // Redirect after a short delay
-            setTimeout(() => {
-                window.location.href = "/dashboard/";  // or your home page
-            }, 1500);
-
-        } catch (error) {
-            console.error("Login error:", error);
-            alert("An unexpected error occurred.");
-        }
-    });
-});
