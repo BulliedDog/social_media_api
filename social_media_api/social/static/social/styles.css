@@ -583,3 +583,27 @@ body {
     gap: 16px;
   }
 }
+
+.like-btn {
+  background-color: transparent !important;
+  background-image: none !important;
+  border: none;
+  padding: 0.4em;
+  border-radius: 6px;
+  cursor: pointer;
+  color: inherit;
+  font: inherit;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+
+.like-btn:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.like-btn.liked i {
+  color: #e0245e;
+}
