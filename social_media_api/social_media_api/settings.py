@@ -28,6 +28,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+LOGIN_URL = '/social/login/'
+
 AUTH_USER_MODEL = 'social.CustomUser'
 
 MEDIA_URL = '/media/'

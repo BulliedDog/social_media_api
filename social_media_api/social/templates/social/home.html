@@ -38,23 +38,15 @@
             <div class="card">
                 <div class="profile-section">
                     <div class="avatar large">
-                        <img src="/placeholder.svg?height=48&width=48" alt="Profile" class="avatar-img">
+                        <img id="profileImage" src="/placeholder.svg?height=48&width=48" alt="Profile" class="avatar-img">
                     </div>
                     <div class="profile-info">
-                        <h3>John Doe</h3>
-                        <p class="username">@johndoe</p>
+                        <h3 id="usernameDisplay"></h3>
                     </div>
                 </div>
 
                 <div class="stats">
-                    <div class="stat">
-                        <span>Following</span>
-                        <span class="stat-number">1,234</span>
-                    </div>
-                    <div class="stat">
-                        <span>Followers</span>
-                        <span class="stat-number">5,678</span>
-                    </div>
+
                 </div>
 
                 <div class="separator"></div>
@@ -89,91 +81,13 @@
             </div>
 
             <!-- Posts Feed -->
-            <div class="posts-feed">
-                <div class="posts-feed">
-                    {% for post in posts %}
-                    <article class="card post">
-                        <header class="post-header">
-                            <div class="post-user">
-                                <div class="avatar">
-                                    <img src="{{post.author.profile_image}}" alt="{{ post.author.username }}" class="avatar-img">
-                                </div>
-                                <div class="post-user-info">
-                                    <h4>{{ post.author.username }}</h4>
-                                    <p class="post-time">{{ post.date_published|naturaltime }}</p>
-                                </div>
-                            </div>
-                        </header>
-
-                        <div class="post-content">
-                            <p>{{ post.title }}</p>
-                            {% if post.image %}
-                                <img src="{{ post.image.url }}" alt="Post image" class="post-image">
-                            {% endif %}
-                            <p>{{ post.description }}</p>
-                        </div>
-
-                        <footer class="post-actions">
-                            <div class="action-buttons">
-                                <button class="action-btn like-btn">
-                                    <i class="far fa-heart"></i>
-                                    <span class="action-count">{{ post.likes.count }}</span>
-                                </button>
-                                <button class="action-btn">
-                                    <i class="far fa-comment"></i>
-                                    <span class="action-count">{{ post.comments.count }}</span>
-                                </button>
-                            </div>
-                            <button class="bookmark-btn">
-                                <i class="far fa-bookmark"></i>
-                            </button>
-                        </footer>
-                    </article>
-                    {% empty %}
-                        <p>No posts found.</p>
-                    {% endfor %}
-                </div>
-
+            <div id="postsFeed" class="posts-feed">
+                
             </div>
         </main>
 
         <!-- Right Sidebar -->
         <aside class="right-sidebar">
-            <!-- Trending -->
-            <div class="card">
-                <h3 class="card-title">Trending Now</h3>
-                <div class="trending-list">
-                    <div class="trending-item">
-                        <div class="trending-info">
-                            <p class="trending-tag">#TechNews</p>
-                            <p class="trending-posts">42K posts</p>
-                        </div>
-                        <i class="fas fa-chart-line trending-icon"></i>
-                    </div>
-                    <div class="trending-item">
-                        <div class="trending-info">
-                            <p class="trending-tag">#Photography</p>
-                            <p class="trending-posts">28K posts</p>
-                        </div>
-                        <i class="fas fa-chart-line trending-icon"></i>
-                    </div>
-                    <div class="trending-item">
-                        <div class="trending-info">
-                            <p class="trending-tag">#Travel</p>
-                            <p class="trending-posts">35K posts</p>
-                        </div>
-                        <i class="fas fa-chart-line trending-icon"></i>
-                    </div>
-                    <div class="trending-item">
-                        <div class="trending-info">
-                            <p class="trending-tag">#FoodieLife</p>
-                            <p class="trending-posts">19K posts</p>
-                        </div>
-                        <i class="fas fa-chart-line trending-icon"></i>
-                    </div>
-                </div>
-            </div>
-
             <!-- Suggested Friends -->
             <div class="card">
                 <h3 class="card-title">People You May Know</h3>
@@ -219,5 +133,7 @@
         </aside>
     </div>
 <script src="{%static 'social/script.js'%}" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/relativeTime.js"></script>
 </body>
 </html>

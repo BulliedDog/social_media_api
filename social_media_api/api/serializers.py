@@ -8,6 +8,7 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['id', 'username', 'email', 'bio', 'profile_image', 'friends'] #must not show password ofc
 
 class PostSerializer(serializers.ModelSerializer):
+    author_username = serializers.CharField(source='author.username', read_only=True)
     class Meta:
         model = Post
         fields = '__all__'

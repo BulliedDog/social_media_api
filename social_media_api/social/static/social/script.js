@@ -1,14 +1,37 @@
 // DOM Elements
+dayjs.extend(dayjs_plugin_relativeTime)
+
 const likeButtons = document.querySelectorAll(".like-btn")
 const bookmarkButtons = document.querySelectorAll(".bookmark-btn")
 const followButtons = document.querySelectorAll(".follow-btn")
 const postButton = document.querySelector(".post-btn")
 const postInput = document.querySelector(".post-input")
 
+function logout() {
+  localStorage.removeItem("accessToken")
+  localStorage.removeItem('refreshToken')
+  localStorage.removeItem("user")
+  window.location.href = "/social/login/"
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   const logoutBtn = document.getElementById("logout-btn")
   if (logoutBtn) {
     logoutBtn.addEventListener("click", logout)
+  }
+  console.log("SocialHub loaded successfully!")
+
+  // Load user profile
+  const user = JSON.parse(localStorage.getItem("user"));
+  const usernameDisplay = document.getElementById("usernameDisplay");
+  if (user && user.username && usernameDisplay) {
+    usernameDisplay.textContent = user.username;
+  }
+
+  loadPosts()
+
+  const token = localStorage.getItem('accessToken')
+  if (!token) {
     logout()
   }
 })
@@ -275,5 +298,53 @@ document.addEventListener("DOMContentLoaded", () => {
 
 const token = localStorage.getItem('accessToken')
 if (!token) {
-  window.location.href = 'social/login'
+  window.location.href = '/social/login/'
 }
+document.addEventListener('DOMContentLoaded', () => {
+  loadPosts()
+})
+
+async function loadPosts() {
+  try {
+    const accessToken = localStorage.getItem('accessToken')
+    if (!accessToken) {
+      throw new Error('User is not authenticated')
+    }
+
+    const res = await fetch('/api/posts/', {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+    })
+
+    if (!res.ok) throw new Error('Failed to fetch posts')
+
+    const posts = await res.json()
+    console.log(posts);
+    const postsFeed = document.getElementById('postsFeed')
+    postsFeed.innerHTML = '' // Clear existing content
+
+    posts.forEach(post => {
+      // Customize this HTML as per your post structure
+      const postEl = document.createElement('div')
+      postEl.className = 'post-card'
+      postEl.innerHTML = `
+        <div class="card">
+        <h3>${post.title}</h3>
+        <p>${dayjs(post.date_published).fromNow()}</p>
+        <img src="${post.image}" alt="${post.title}" />
+        <p>${post.description}</p>
+        <small>By ${post.author_username}</small>
+        </div>
+      `
+      postsFeed.appendChild(postEl)
+    })
+
+  } catch (error) {
+    console.error(error)
+    document.getElementById('postsFeed').textContent = 'Failed to load posts.'
+  }
+}
+
+document.addEventListener('DOMContentLoaded', loadPosts)

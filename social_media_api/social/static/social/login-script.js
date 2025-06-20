@@ -70,7 +70,26 @@ if (loginForm) {
       localStorage.setItem("accessToken", data.access)
       localStorage.setItem("refreshToken", data.refresh)
 
+      try {
+        const profileRes = await fetch("/api/user/", {
+          headers: {
+            "Authorization": `Bearer ${data.access}`,
+            "Content-Type": "application/json"
+          }
+        })
+
+        if (!profileRes.ok) throw new Error("Failed to fetch user profile")
+
+        const userData = await profileRes.json()
+        localStorage.setItem("user", JSON.stringify(userData))
+      } catch (profileErr) {
+        console.error("User profile fetch error:", profileErr)
+        showError("Unable to load user profile.")
+        return
+      }
+
       window.location.href = "/social/home/"
+
     } catch (err) {
       showError(err.message || "Login error")
       window.location.href = "/social/login/"
@@ -108,7 +127,6 @@ if (signupForm) {
       const data = await res.json()
       if (!res.ok) throw new Error(data.detail || "Signup failed")
 
-      // Optional: store token if your API returns them
       if (data.access && data.refresh) {
         localStorage.setItem("accessToken", data.access)
         localStorage.setItem("refreshToken", data.refresh)
