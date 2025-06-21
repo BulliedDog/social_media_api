@@ -28,9 +28,12 @@ class PostSerializer(serializers.ModelSerializer):
         return False
 
 class CommentSerializer(serializers.ModelSerializer):
+    author = serializers.CharField(source='author.username', read_only=True)
+
     class Meta:
         model = Comment
         fields = '__all__'
+
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
@@ -54,7 +57,7 @@ class RegisterSerializer(serializers.ModelSerializer):
             password=validated_data['password'],
             bio=validated_data.get('bio', '')
         )
-        #this way everyone who registers will become a normal user and not a django superuser
+        #this way everyone who registers will become a normal user and not a django superuser, this changes permission to users
         user.is_staff = False
         user.is_superuser = False
         user.save()

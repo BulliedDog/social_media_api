@@ -67,7 +67,9 @@
                         <input type="text" id="post-input" placeholder="What's on your mind?" class="post-input">
                         <div class="create-post-actions">
                             <div class="post-options">
-                                <button class="post-option-btn">Photo</button>
+                                <input type="file" id="post-image-input" style="display: none;" />
+                                <label for="post-image-input" class="post-btn-style">Choose Image</label>
+                                <span id="file-name" style="margin-left: 0.5rem; font-style: italic; color: white;"></span>
                             </div>
                             <button class="post-btn">Post</button>
                         </div>

@@ -64,6 +64,9 @@ class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
     permission_classes = [IsAuthenticated]
 
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
+
 class RegisterViewSet(mixins.CreateModelMixin,
                       viewsets.GenericViewSet):
     serializer_class = RegisterSerializer

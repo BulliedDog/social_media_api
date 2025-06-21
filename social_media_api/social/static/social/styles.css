@@ -342,7 +342,21 @@ body {
   background-color: #db2777;
 }
 
-/* Posts */
+.post-btn-style {
+  padding: 0.6rem 1.2rem;
+  background-color: #ec4899;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
+}
+
+.post-btn-style:hover {
+  background-color: #db2777;
+}
+
 .posts-feed {
   display: flex;
   flex-direction: column;
@@ -582,6 +596,15 @@ body {
   .action-buttons {
     gap: 16px;
   }
+}
+
+.post-card img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 8px;
+  display: block;
+  margin: 0.5rem 0;
 }
 
 .like-btn {

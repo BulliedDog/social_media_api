@@ -17,10 +17,8 @@ function bindLikeButtons() {
       const isLiked = this.classList.contains("liked")
       const countElement = this.querySelector(".action-count")
       const heartIcon = this.querySelector("i")
-      let currentCount = Number.parseInt(this.dataset.likes)
       const postId = this.dataset.postId
 
-      // Call backend to toggle like
       const res = await fetch(`/api/posts/${postId}/like/`, {
         method: 'POST',
         headers: {
@@ -36,7 +34,6 @@ function bindLikeButtons() {
 
       const data = await res.json()
 
-      // Update UI with correct count and state
       if (data.liked) {
         this.classList.add("liked")
         heartIcon.classList.remove("far")
@@ -53,29 +50,34 @@ function bindLikeButtons() {
   })
 }
 
-function bindBookmarkButtons() {
-  const bookmarkButtons = document.querySelectorAll(".bookmark-btn")
-  bookmarkButtons.forEach((button) => {
-    button.addEventListener("click", function () {
-      const isBookmarked = this.classList.contains("bookmarked")
-      const icon = this.querySelector("i")
-
-      if (isBookmarked) {
-        this.classList.remove("bookmarked")
-        icon.classList.remove("fas")
-        icon.classList.add("far")
-      } else {
-        this.classList.add("bookmarked")
-        icon.classList.remove("far")
-        icon.classList.add("fas")
-        this.style.transform = "scale(1.2)"
-        setTimeout(() => {
-          this.style.transform = "scale(1)"
-        }, 150)
+async function loadComments(postId) {
+  try {
+    const res = await fetch("/api/comments/", {
+      headers: {
+        "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
       }
     })
-  })
+
+    if (!res.ok) throw new Error("Could not load comments")
+
+    const comments = await res.json()
+    const container = document.querySelector(`.comments-container[data-post-id="${postId}"]`)
+    container.innerHTML = ""
+
+    comments
+      .filter(c => c.post === postId)
+      .sort((a, b) => new Date(a.created_at) - new Date(b.created_at))
+      .forEach(c => {
+        const el = document.createElement("div")
+        el.className = "comment"
+        el.innerHTML = `<strong>${c.author}</strong>: ${c.text} <small>${dayjs(c.created_at).fromNow()}</small>`
+        container.appendChild(el)
+      })
+  } catch (err) {
+    console.error(err)
+  }
 }
+
 
 function bindFollowButtons() {
   const followButtons = document.querySelectorAll(".follow-btn")
@@ -107,8 +109,6 @@ async function loadPosts() {
     if (!res.ok) throw new Error('Failed to fetch posts')
 
     const posts = await res.json()
-
-    // Sort newest to oldest
     posts.sort((a, b) => new Date(b.date_published) - new Date(a.date_published))
 
     const postsFeed = document.getElementById('postsFeed')
@@ -122,7 +122,7 @@ async function loadPosts() {
         <div class="card">
           <h3>${post.title}</h3>
           <p>${dayjs(post.date_published).fromNow()}</p>
-          ${post.image ? `<img src="${post.image}" alt="${post.title}" />` : ''}
+          ${post.image ? `<img src="${post.image}" alt="${post.title}" style="width:100%; height:auto; object-fit:cover;" />` : ''}
           <p>${post.description}</p>
           <small>By ${post.author_username}</small>
           <button
@@ -134,17 +134,111 @@ async function loadPosts() {
             <i class="${post.user_liked ? 'fas' : 'far'} fa-heart"></i>
             <span class="action-count">${post.likes_count}</span>
           </button>
+          <div class="comments-section" data-post-id="${post.id}">
+            <button class="toggle-comments post-btn-style">Show Comments</button>
+            <div class="comments-container" data-post-id="${post.id}" style="display:none;">
+              <div class="comments-list"></div>
+            </div>
+            <form class="comment-form">
+              <input class="post-input" type="text" name="comment" placeholder="Add a comment..." required />
+              <button class="post-btn-style" type="submit">Post comment</button>
+            </form>
+          </div>
         </div>
       `
 
       postsFeed.appendChild(postEl)
+
+      // Attach comment toggle logic
+      const toggleBtn = postEl.querySelector('.toggle-comments')
+      const commentsContainer = postEl.querySelector('.comments-container')
+
+      toggleBtn.addEventListener('click', () => {
+        const isVisible = commentsContainer.style.display === 'block'
+        commentsContainer.style.display = isVisible ? 'none' : 'block'
+        toggleBtn.textContent = isVisible ? 'Show Comments' : 'Hide Comments'
+        if (!isVisible) loadComments(post.id)
+      })
+
+      // Handle comment submission
+      const form = postEl.querySelector('.comment-form')
+      const input = postEl.querySelector('.post-input')
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault()
+        const text = input.value.trim()
+        if (!text) return
+
+        try {
+          const res = await fetch("/api/comments/", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
+            },
+            body: JSON.stringify({ text, post: post.id })
+          })
+
+          if (res.ok) {
+            input.value = ""
+            loadComments(post.id)
+          } else {
+            console.error("Failed to post comment")
+          }
+        } catch (err) {
+          console.error(err)
+        }
+      })
     })
 
     bindLikeButtons()
-    bindBookmarkButtons()
   } catch (err) {
     console.error(err)
     document.getElementById('postsFeed').textContent = 'Failed to load posts.'
+  }
+}
+
+
+async function handlePostSubmit() {
+  const postText = document.getElementById("post-input").value.trim()
+  const postTitle = document.getElementById("post-title-input").value.trim()
+  const imageInput = document.getElementById("post-image-input")
+  const token = localStorage.getItem("accessToken")
+
+  if (!postTitle || !postText) {
+    alert("Title and description required")
+    return
+  }
+
+  try {
+    const formData = new FormData()
+    formData.append("title", postTitle)
+    formData.append("description", postText)
+    if (imageInput?.files.length > 0) {
+      formData.append("image", imageInput.files[0])
+    }
+
+    const res = await fetch("/api/posts/", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${token}`
+      },
+      body: formData
+    })
+
+    const data = await res.json()
+    if (!res.ok) return alert("Failed: " + (data.detail || JSON.stringify(data)))
+
+    document.getElementById("post-input").value = ""
+    document.getElementById("post-title-input").value = ""
+    document.getElementById("post-image-input").value = ""
+    document.getElementById("file-name").textContent = ""
+    if (imageInput) imageInput.value = ""
+
+    loadPosts()
+  } catch (err) {
+    console.error("Error:", err)
+    alert("Something went wrong")
   }
 }
 
@@ -159,39 +253,27 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   const postButton = document.querySelector(".post-btn")
-  const postInput = document.getElementById("post-input")
-  const postTitleInput = document.getElementById("post-title-input")
-
-  if (postButton && postInput && postTitleInput) {
-    postButton.addEventListener("click", async () => {
-      const postText = postInput.value.trim()
-      const postTitle = postTitleInput.value.trim()
-      const token = localStorage.getItem("accessToken")
-
-      if (!postTitle || !postText) return alert("Title and description required")
-
-      try {
-        const res = await fetch("/api/posts/", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-          },
-          body: JSON.stringify({ title: postTitle, description: postText })
-        })
-
-        const data = await res.json()
-        if (!res.ok) return alert("Failed: " + (data.detail || JSON.stringify(data)))
-
-        postInput.value = ""
-        postTitleInput.value = ""
-        loadPosts()
-      } catch (err) {
-        console.error("Error:", err)
-        alert("Something went wrong")
-      }
-    })
+  if (postButton && !postButton.dataset.bound) {
+    postButton.addEventListener("click", handlePostSubmit)
+    postButton.dataset.bound = "true" 
   }
+
+  const logoutBtn = document.getElementById("logout-btn")
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", logout)
+  }
+
+  const imageInput = document.getElementById("post-image-input")
+  const fileNameDisplay = document.getElementById("file-name")
+
+  imageInput.addEventListener("change", () => {
+    const file = imageInput.files[0]
+    if (file) {
+      fileNameDisplay.textContent = file.name
+    } else {
+      fileNameDisplay.textContent = ""
+    }
+  })
 
   bindFollowButtons()
   loadPosts()

@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
+from django.utils import timezone
 
 class CustomUser(AbstractUser):
     bio = models.TextField(blank=True)
@@ -35,6 +36,8 @@ class Comment(models.Model):
     author=models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
     post=models.ForeignKey(Post, on_delete=models.CASCADE,null=False,related_name="comments")
     text=models.CharField(max_length=500,blank=False)
+    created_at = models.DateTimeField(default=timezone.now)
+
     class Meta:
         managed = True
         verbose_name = 'Comment'
