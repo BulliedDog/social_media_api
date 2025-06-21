@@ -3,9 +3,26 @@ from social.models import CustomUser, Post, Comment
 from django.contrib.auth.password_validation import validate_password
 
 class UserSerializer(serializers.ModelSerializer):
+    is_following = serializers.SerializerMethodField()
+    mutual_friends_count = serializers.SerializerMethodField()
+    
     class Meta:
         model = CustomUser
-        fields = ['id', 'username', 'email', 'bio', 'profile_image', 'friends'] #must not show password ofc
+        fields = '__all__'
+
+    def get_is_following(self, obj):
+        request = self.context.get('request')
+        if request and request.user.is_authenticated:
+            return obj in request.user.friends.all()
+        return False
+
+    def get_mutual_friends_count(self, obj):
+        request = self.context.get('request')
+        if request and request.user.is_authenticated:
+            user_friends = set(request.user.friends.all())
+            obj_friends = set(obj.friends.all())
+            return len(user_friends.intersection(obj_friends))
+        return 0
 
 class PostSerializer(serializers.ModelSerializer):
     author_username = serializers.CharField(source='author.username', read_only=True)

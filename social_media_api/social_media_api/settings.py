@@ -46,11 +46,12 @@ REST_FRAMEWORK = {
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),   # default is 5 minutes
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),      # default is 1 day
+    'REFRESH_TOKEN_LIFETIME': timedelta(hours=1),      # default is 1 day
 }
 
 INSTALLED_APPS = [
     'social',
+    'api',
     'polls',
     'django.contrib.humanize',
     'django.contrib.admin',

@@ -81,17 +81,82 @@ async function loadComments(postId) {
 
 function bindFollowButtons() {
   const followButtons = document.querySelectorAll(".follow-btn")
-  followButtons.forEach((button) => {
-    button.addEventListener("click", function () {
-      const isFollowing = this.classList.contains("following")
-      this.classList.toggle("following")
-      this.textContent = isFollowing ? "Follow" : "Following"
-      this.style.transform = "scale(1.1)"
-      setTimeout(() => {
-        this.style.transform = "scale(1)"
-      }, 150)
+  followButtons.forEach(button => {
+    // Remove existing listeners before adding new to avoid duplicates
+    button.replaceWith(button.cloneNode(true))
+  })
+  // Re-select buttons after cloning (removes duplicates)
+  document.querySelectorAll(".follow-btn").forEach(button => {
+    button.addEventListener("click", async () => {
+      const userId = button.dataset.userId
+      const isFollowing = button.classList.contains("following")
+
+      try {
+        const endpoint = `/api/users/${userId}/${isFollowing ? 'unfollow' : 'follow'}/`
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+            'Content-Type': 'application/json'
+          }
+        })
+
+        if (!res.ok) throw new Error("Failed to update follow status")
+
+        button.classList.toggle("following")
+        button.textContent = isFollowing ? "Follow" : "Following"
+      } catch (err) {
+        console.error(err)
+      }
     })
   })
+}
+
+
+async function loadUsers() {
+  try {
+    const token = localStorage.getItem('accessToken')
+    if (!token) throw new Error('User not authenticated')
+
+    const res = await fetch('/api/users/', {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    })
+
+    if (!res.ok) throw new Error('Failed to fetch users')
+
+    const users = await res.json()
+
+    const suggestionsList = document.querySelector('.suggestions-list')
+    if (!suggestionsList) return
+
+    suggestionsList.innerHTML = '' // clear example users
+
+    users.forEach(user => {
+      const mutualCount = user.mutual_friends_count || 0
+
+      const userEl = document.createElement('div')
+      userEl.className = 'suggestion-item'
+      userEl.innerHTML = `
+        <div class="suggestion-user">
+          <div class="suggestion-info">
+            <p class="suggestion-name">${user.username}</p>
+            <p class="suggestion-mutual">${mutualCount} mutual friend${mutualCount !== 1 ? 's' : ''}</p>
+          </div>
+        </div>
+        <button class="follow-btn ${user.is_following ? 'following' : ''}" data-user-id="${user.id}">
+          ${user.is_following ? 'Following' : 'Follow'}
+        </button>
+      `
+      suggestionsList.appendChild(userEl)
+    })
+
+    bindFollowButtons() // bind after inserting elements
+  } catch (err) {
+    console.error('Error loading users:', err)
+  }
 }
 
 async function loadPosts() {
@@ -277,4 +342,5 @@ document.addEventListener("DOMContentLoaded", () => {
 
   bindFollowButtons()
   loadPosts()
+  loadUsers()
 })
