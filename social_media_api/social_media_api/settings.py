@@ -54,9 +54,9 @@ SIMPLE_JWT = {
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': '<your-cloud-name>',
-    'API_KEY': '<your-api-key>',
-    'API_SECRET': '<your-api-secret>',
+    'CLOUD_NAME': 'duawstwam',
+    'API_KEY': '867393318527471',
+    'API_SECRET': 'BWiX9Sm9YY9KJXAso3LI65CCSZc',
 }
 
 INSTALLED_APPS = [
