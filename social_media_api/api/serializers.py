@@ -28,12 +28,12 @@ class PostSerializer(serializers.ModelSerializer):
     author_username = serializers.CharField(source='author.username', read_only=True)
     likes_count = serializers.SerializerMethodField()
     user_liked = serializers.SerializerMethodField()
-    image = serializers.SerializerMethodField()
+    image_url = serializers.SerializerMethodField()
 
     class Meta:
         model = Post
         fields = '__all__'
-        read_only_fields = ['author', 'author_username', 'date_published']
+        read_only_fields = ['author', 'author_username', 'date_published', 'image_url']
     def get_likes_count(self, obj):
         return obj.likes.count()
     def get_user_liked(self, obj):
@@ -41,7 +41,7 @@ class PostSerializer(serializers.ModelSerializer):
         if request and hasattr(request, "user") and request.user.is_authenticated:
             return obj.likes.filter(id=request.user.id).exists()
         return False
-    def get_image(self, obj):
+    def get_image_url(self, obj):
         if obj.image:
             return obj.image.url
         return None

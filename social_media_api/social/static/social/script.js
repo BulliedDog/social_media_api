@@ -187,7 +187,7 @@ async function loadPosts() {
         <div class="card">
           <h3>${post.title}</h3>
           <p>${dayjs(post.date_published).fromNow()}</p>
-          ${post.image ? `<img src="${post.image}" alt="${post.title}" style="width:100%; height:auto; object-fit:cover;" />` : ''}
+          ${post.image_url ? `<img src="${post.image_url}" alt="${post.title}" style="width:100%; height:auto; object-fit:cover;" />` : ''}
           <p>${post.description}</p>
           <small>By ${post.author_username}</small>
           <button
@@ -200,7 +200,7 @@ async function loadPosts() {
             <span class="action-count">${post.likes_count}</span>
           </button>
           <div class="comments-section" data-post-id="${post.id}">
-            <button class="toggle-comments post-btn-style">Show Comments</button>
+            <button style="margin-bottom:20px;" class="toggle-comments post-btn-style">Show Comments</button>
             <div class="comments-container" data-post-id="${post.id}" style="display:none;">
               <div class="comments-list"></div>
             </div>
