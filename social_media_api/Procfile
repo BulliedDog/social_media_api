@@ -1,1 +1,2 @@
 web: gunicorn social_media_api.wsgi:application
+web: python manage.py collectstatic --noinput && gunicorn social_media_api.wsgi
