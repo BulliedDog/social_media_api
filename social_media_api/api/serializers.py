@@ -36,9 +36,6 @@ class PostSerializer(serializers.ModelSerializer):
     def get_likes_count(self, obj):
         return obj.likes.count()
     def get_user_liked(self, obj):
-        user = self.context['request'].user
-        return user in obj.likes.all()
-    def get_user_liked(self, obj):
         request = self.context.get('request')
         if request and hasattr(request, "user") and request.user.is_authenticated:
             return obj.likes.filter(id=request.user.id).exists()

@@ -20,6 +20,9 @@ import cloudinary.api
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+CLOUDINARY_CLOUD_NAME = "duawstwam"
+CLOUDINARY_API_KEY = "867393318527471"
+CLOUDINARY_API_SECRET = "BWiX9Sm9YY9KJXAso3LI65CCSZc"
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -33,9 +36,6 @@ CSRF_TRUSTED_ORIGINS = ["https://*.railway.app"]
 LOGIN_URL = '/social/login/'
 
 AUTH_USER_MODEL = 'social.CustomUser'
-
-#MEDIA_URL = '/media/'
-#MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -51,31 +51,20 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(hours=1),      # default is 1 day
 }
 
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': 'duawstwam',
-    'API_KEY': '867393318527471',
-    'API_SECRET': 'BWiX9Sm9YY9KJXAso3LI65CCSZc',
-}
-
-CLOUDINARY_URL='cloudinary://867393318527471:BWiX9Sm9YY9KJXAso3LI65CCSZc@duawstwam'
-
 INSTALLED_APPS = [
     'cloudinary',
-    'cloudinary_storage',
-    'social',
-    'api',
-    'polls',
-    'django.contrib.humanize',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     'rest_framework',
     'rest_framework_simplejwt',
+    'social',
+    'api',
+    'polls',
 ]
 
 MIDDLEWARE = [

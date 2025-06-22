@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 from django.utils import timezone
+from cloudinary.models import CloudinaryField
 
 class CustomUser(AbstractUser):
     bio = models.TextField(blank=True)
@@ -21,7 +22,7 @@ class Post(models.Model):
     description=models.CharField(blank=True,max_length=1000)
     author=models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,related_name='author')
     likes = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True)
-    image=models.ImageField(upload_to='post_pics/',null=True,blank=True)
+    image=CloudinaryField('image', blank=True, null=True)
     date_published=models.DateTimeField("date published", auto_now_add=True)
     class Meta:
         ordering=['date_published','title']
