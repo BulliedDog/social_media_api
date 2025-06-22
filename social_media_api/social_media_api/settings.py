@@ -24,10 +24,17 @@ CLOUDINARY_CLOUD_NAME = "duawstwam"
 CLOUDINARY_API_KEY = "867393318527471"
 CLOUDINARY_API_SECRET = "BWiX9Sm9YY9KJXAso3LI65CCSZc"
 
+cloudinary.config(
+    cloud_name=CLOUDINARY_CLOUD_NAME,
+    api_key=CLOUDINARY_API_KEY,
+    api_secret=CLOUDINARY_API_SECRET
+)
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
-DEBUG = os.getenv("DEBUG", "False") == "True"
+#DEBUG = os.getenv("DEBUG", "False") == "True"
+DEBUG = True
 SECRET_KEY = os.getenv("SECRET_KEY", "unsafe-secret-key")
 
 ALLOWED_HOSTS = ["*"]

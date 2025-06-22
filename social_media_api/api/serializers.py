@@ -28,6 +28,7 @@ class PostSerializer(serializers.ModelSerializer):
     author_username = serializers.CharField(source='author.username', read_only=True)
     likes_count = serializers.SerializerMethodField()
     user_liked = serializers.SerializerMethodField()
+    image = serializers.SerializerMethodField()
 
     class Meta:
         model = Post
@@ -40,6 +41,10 @@ class PostSerializer(serializers.ModelSerializer):
         if request and hasattr(request, "user") and request.user.is_authenticated:
             return obj.likes.filter(id=request.user.id).exists()
         return False
+    def get_image(self, obj):
+        if obj.image:
+            return obj.image.url
+        return None
 
 class CommentSerializer(serializers.ModelSerializer):
     author = serializers.CharField(source='author.username', read_only=True)
