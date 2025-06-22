@@ -34,8 +34,8 @@ LOGIN_URL = '/social/login/'
 
 AUTH_USER_MODEL = 'social.CustomUser'
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+#MEDIA_URL = '/media/'
+#MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -58,6 +58,8 @@ CLOUDINARY_STORAGE = {
     'API_KEY': '867393318527471',
     'API_SECRET': 'BWiX9Sm9YY9KJXAso3LI65CCSZc',
 }
+
+CLOUDINARY_URL='cloudinary://867393318527471:BWiX9Sm9YY9KJXAso3LI65CCSZc@duawstwam'
 
 INSTALLED_APPS = [
     'cloudinary',
