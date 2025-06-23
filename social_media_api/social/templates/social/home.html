@@ -22,11 +22,9 @@
             </div>
             
             <nav class="header-nav">
-                <button class="nav-btn active">
-                    <i class="fas fa-home"></i>
-                </button>
                 <button id="logout-btn" class="nav-btn active">
                     <i class="fas fa-sign-out"></i>
+                    Logout
                 </button>
             </nav>
         </div>
@@ -38,22 +36,10 @@
             <div class="card">
                 <div class="profile-section">
                     <div class="profile-info">
-                        <h3 id="usernameDisplay"></h3>
+                        <strong>Profile:</strong>
+                        <h2 id="usernameDisplay"></h2>
                     </div>
                 </div>
-
-                <div class="stats">
-
-                </div>
-
-                <div class="separator"></div>
-
-                <nav class="sidebar-nav">
-                    <button class="sidebar-btn">
-                        <i class="fas fa-user"></i>
-                        Profile
-                    </button>
-                </nav>
             </div>
         </aside>
 
@@ -71,7 +57,11 @@
                                 <label for="post-image-input" class="post-btn-style">Choose Image</label>
                                 <span id="file-name" style="margin-left: 0.5rem; font-style: italic; color: white;"></span>
                             </div>
-                            <button class="post-btn">Post</button>
+                            <button class="post-btn">
+                                <span class="btn-text">Post</span>
+                                <span class="btn-loader" style="display:none;">
+                                    <i class="fas fa-spinner fa-spin"></i> </span>
+                            </button>
                         </div>
                     </div>
                 </div>

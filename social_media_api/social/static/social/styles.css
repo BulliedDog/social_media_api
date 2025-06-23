@@ -630,3 +630,24 @@ body {
 .like-btn.liked i {
   color: #e0245e;
 }
+
+.message-box {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    max-width: 90%;
+    width: 300px;
+    text-align: center;
+}
+
+.success-message {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}

@@ -1,37 +1,41 @@
-{%load static%}
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - SocialHub</title>
-    <link rel="stylesheet" href="{%static '/social/login-styles.css'%}">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'social/login-styles.css' %}">
 </head>
 <body>
-    <div class="login-container">
-        <!-- Background Pattern -->
+    <div class="auth-container">
         <div class="background-pattern"></div>
         
-        <!-- Login Card -->
-        <div class="login-card" id="loginCard">
-            <!-- Logo Section -->
+        <div id="message" class="message-box error-message"></div>
+        <div id="successMessage" class="message-box success-message">
+            <div class="success-content">
+                <i class="fas fa-check-circle"></i>
+                <h3></h3> <p>Redirecting you to your dashboard...</p>
+            </div>
+        </div>
+
+        <div class="auth-card login-card" id="loginCard">
             <div class="logo-section">
                 <h1 class="logo">SocialHub</h1>
                 <p class="tagline">Connect with friends and the world around you</p>
             </div>
 
-            <!-- Login Form -->
             <form class="login-form" id="loginForm">
                 <div class="form-group">
                     <label for="username" class="form-label">Username</label>
                     <div class="input-container">
                         <i class="fas fa-user input-icon"></i>
-                        <input 
-                            type="text" 
-                            id="username" 
-                            name="username" 
-                            class="form-input" 
+                        <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            class="form-input"
                             placeholder="Enter your username"
                             required
                         >
@@ -42,11 +46,11 @@
                     <label for="password" class="form-label">Password</label>
                     <div class="input-container">
                         <i class="fas fa-lock input-icon"></i>
-                        <input 
-                            type="password" 
-                            id="password" 
-                            name="password" 
-                            class="form-input" 
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            class="form-input"
                             placeholder="Enter your password"
                             required
                         >
@@ -56,22 +60,20 @@
                     </div>
                 </div>
 
-                <button type="submit" class="login-btn" id="loginBtn">
+                <button type="submit" class="login-btn auth-btn" id="loginBtn">
                     <span class="btn-text">Sign In</span>
-                    <div class="btn-loader" style="display: none;">
+                    <div class="btn-loader">
                         <i class="fas fa-spinner fa-spin"></i>
                     </div>
                 </button>
             </form>
 
-            <!-- Sign Up Link -->
             <div class="signup-section">
                 <p>Don't have an account? <a href="#" class="signup-link" id="signupLink">Sign up</a></p>
             </div>
         </div>
 
-        <!-- Sign Up Form (Hidden by default) -->
-        <div class="signup-card" id="signupCard" style="display: none;">
+        <div class="auth-card signup-card" id="signupCard" style="display: none;">
             <div class="logo-section">
                 <h1 class="logo">Join SocialHub</h1>
                 <p class="tagline">Create your account and start connecting</p>
@@ -82,11 +84,11 @@
                     <label for="signupUsername" class="form-label">Username</label>
                     <div class="input-container">
                         <i class="fas fa-user input-icon"></i>
-                        <input 
-                            type="text" 
-                            id="signupUsername" 
-                            name="signupUsername" 
-                            class="form-input" 
+                        <input
+                            type="text"
+                            id="signupUsername"
+                            name="signupUsername"
+                            class="form-input"
                             placeholder="Choose a username"
                             required
                         >
@@ -97,11 +99,11 @@
                     <label for="signupEmail" class="form-label">Email</label>
                     <div class="input-container">
                         <i class="fas fa-envelope input-icon"></i>
-                        <input 
-                            type="email" 
-                            id="signupEmail" 
-                            name="signupEmail" 
-                            class="form-input" 
+                        <input
+                            type="email"
+                            id="signupEmail"
+                            name="signupEmail"
+                            class="form-input"
                             placeholder="Enter your email"
                             required
                         >
@@ -112,11 +114,11 @@
                     <label for="signupPassword" class="form-label">Password</label>
                     <div class="input-container">
                         <i class="fas fa-lock input-icon"></i>
-                        <input 
-                            type="password" 
-                            id="signupPassword" 
-                            name="signupPassword" 
-                            class="form-input" 
+                        <input
+                            type="password"
+                            id="signupPassword"
+                            name="signupPassword"
+                            class="form-input"
                             placeholder="Create a password"
                             required
                         >
@@ -130,14 +132,17 @@
                     <label for="confirmPassword" class="form-label">Repeat Password</label>
                     <div class="input-container">
                         <i class="fas fa-lock input-icon"></i>
-                        <input 
-                            type="password" 
-                            id="confirmPassword" 
-                            name="confirmPassword" 
-                            class="form-input" 
+                        <input
+                            type="password"
+                            id="confirmPassword"
+                            name="confirmPassword"
+                            class="form-input"
                             placeholder="Repeat your password"
                             required
                         >
+                        <button type="button" class="toggle-password" id="toggleConfirmPassword">
+                            <i class="far fa-eye"></i>
+                        </button>
                     </div>
                 </div>
 
@@ -145,19 +150,19 @@
                     <label for="bio" class="form-label">Bio</label>
                     <div class="input-container">
                         <i class="fas fa-edit input-icon bio-icon"></i>
-                        <textarea 
-                            id="bio" 
-                            name="bio" 
-                            class="form-textarea" 
+                        <textarea
+                            id="bio"
+                            name="bio"
+                            class="form-textarea"
                             placeholder="Tell us about yourself..."
                             rows="3"
                         ></textarea>
                     </div>
                 </div>
 
-                <button type="submit" class="signup-btn" id="signupBtn">
+                <button type="submit" class="signup-btn auth-btn" id="signupBtn">
                     <span class="btn-text">Create Account</span>
-                    <div class="btn-loader" style="display: none;">
+                    <div class="btn-loader">
                         <i class="fas fa-spinner fa-spin"></i>
                     </div>
                 </button>
@@ -167,17 +172,8 @@
                 <p>Already have an account? <a href="#" class="signin-link" id="signinLink">Sign in</a></p>
             </div>
         </div>
-    </div>
 
-    <!-- Success Message -->
-    <div class="success-message" id="successMessage" style="display: none;">
-        <div class="success-content">
-            <i class="fas fa-check-circle"></i>
-            <h3>Welcome to SocialHub!</h3>
-            <p>Redirecting you to your dashboard...</p>
-        </div>
-    </div>
+    </div> 
 <script src="{% static '/social/login-script.js' %}"></script>
-
 </body>
 </html>
