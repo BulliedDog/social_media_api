@@ -1,6 +1,5 @@
 # SOCIAL HUB
-
-# https://socialmediaapi-production-26a7.up.railway.app/social/login/
+https://socialmediaapi-production-26a7.up.railway.app/social/login/
 
 This social media platform lets you share what's on your mind with posts that can include text and images, and connect with others by following them and interacting with their content.
 
