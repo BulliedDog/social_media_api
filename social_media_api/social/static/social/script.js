@@ -444,7 +444,6 @@ async function handlePostSubmit() {
             if (fileNameDisplay) fileNameDisplay.textContent = "";
             
             loadPosts(); 
-            alert("Post created successfully!");
         } else {
             const errorData = await res.json().catch(() => ({}));
             console.error("handlePostSubmit: Failed to submit post (API error):", errorData);
