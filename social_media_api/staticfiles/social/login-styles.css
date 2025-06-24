@@ -4,16 +4,20 @@
   box-sizing: border-box;
 }
 
-body {
+html, body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   background-color: #000000;
   color: #ffffff;
   line-height: 1.6;
   min-height: 100vh;
   overflow-x: hidden;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
 }
 
-/* Background Pattern */
 .background-pattern {
   position: fixed;
   top: 0;
@@ -26,7 +30,6 @@ body {
   z-index: -1;
 }
 
-/* Login Container */
 .login-container {
   min-height: 100vh;
   display: flex;
@@ -36,9 +39,9 @@ body {
   position: relative;
 }
 
-/* Login/Signup Cards */
 .login-card,
-.signup-card {
+.signup-card,
+.auth-card {
   background-color: #111827;
   border: 1px solid #374151;
   border-radius: 16px;
@@ -49,6 +52,14 @@ body {
   backdrop-filter: blur(10px);
   animation: slideIn 0.5s ease-out;
   transition: all 0.3s ease;
+  max-height: 90vh;
+  overflow-y: scroll;
+  box-sizing: border-box;
+  scrollbar-width: none;
+}
+
+.auth-card::-webkit-scrollbar {
+  display: none;
 }
 
 @keyframes slideIn {
@@ -62,7 +73,6 @@ body {
   }
 }
 
-/* Logo Section */
 .logo-section {
   text-align: center;
   margin-bottom: 32px;
@@ -80,7 +90,6 @@ body {
   font-size: 16px;
 }
 
-/* Form Styles */
 .login-form,
 .signup-form {
   display: flex;
@@ -171,9 +180,9 @@ body {
   color: #ec4899;
 }
 
-/* Buttons */
 .login-btn,
-.signup-btn {
+.signup-btn,
+.auth-btn {
   width: 100%;
   padding: 16px;
   background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
@@ -189,19 +198,22 @@ body {
 }
 
 .login-btn:hover,
-.signup-btn:hover {
+.signup-btn:hover,
+.auth-btn:hover {
   background: linear-gradient(135deg, #db2777 0%, #be185d 100%);
   transform: translateY(-2px);
   box-shadow: 0 10px 20px rgba(236, 72, 153, 0.3);
 }
 
 .login-btn:active,
-.signup-btn:active {
+.signup-btn:active,
+.auth-btn:active {
   transform: translateY(0);
 }
 
 .login-btn:disabled,
-.signup-btn:disabled {
+.signup-btn:disabled,
+.auth-btn:disabled {
   opacity: 0.7;
   cursor: not-allowed;
   transform: none;
@@ -212,9 +224,21 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  display: none;
 }
 
-/* Sign Up/Sign In Links */
+.btn-loader i {
+  color: white;
+}
+
+.auth-btn:disabled .btn-text {
+  display: none;
+}
+
+.auth-btn:disabled .btn-loader {
+  display: block !important;
+}
+
 .signup-section,
 .signin-section {
   text-align: center;
@@ -243,7 +267,6 @@ body {
   text-decoration: underline;
 }
 
-/* Success Message */
 .success-message {
   position: fixed;
   top: 0;
@@ -295,7 +318,6 @@ body {
   font-size: 16px;
 }
 
-/* Animation for form switching */
 .fade-out {
   animation: fadeOut 0.3s ease-out forwards;
 }
@@ -326,7 +348,6 @@ body {
   }
 }
 
-/* Input validation styles */
 .form-input.error,
 .form-textarea.error {
   border-color: #ef4444;
@@ -343,12 +364,15 @@ body {
   color: #ef4444;
   font-size: 12px;
   margin-top: 4px;
+  background-color: #ffe0e0;
+  color: #d32f2f;
+  border: 1px solid #d32f2f;
 }
 
-/* Responsive Design */
 @media (max-width: 480px) {
   .login-card,
-  .signup-card {
+  .signup-card,
+  .auth-card {
     padding: 24px;
     margin: 10px;
   }
@@ -356,4 +380,28 @@ body {
   .logo {
     font-size: 28px;
   }
+}
+
+.message-box {
+  padding: 10px 15px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  font-size: 0.95em;
+  display: none;
+  text-align: center;
+  width: 100%;
+  max-width: 400px;
+}
+
+.auth-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 500px;
+  padding: 20px;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 1;
 }

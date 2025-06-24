@@ -74,7 +74,6 @@ async function makeAuthenticatedRequest(url, options = {}) {
 
     const headers = {
         'Authorization': `Bearer ${accessToken}`,
-        // 'Content-Type': 'application/json', // This will be set by FormData automatically if body is FormData
         ...options.headers 
     };
 
@@ -92,7 +91,11 @@ async function makeAuthenticatedRequest(url, options = {}) {
         headers: headers
     };
 
+    // Added more logging to makeAuthenticatedRequest
+    console.log(`makeAuthenticatedRequest: Fetching ${url} with options:`, fetchOptions);
+
     const res = await fetch(url, fetchOptions);
+    console.log(`makeAuthenticatedRequest: Response status for ${url}: ${res.status}`);
 
     // Handle 401 Unauthorized or 403 Forbidden errors
     if (res.status === 401 || res.status === 403) {
@@ -103,13 +106,16 @@ async function makeAuthenticatedRequest(url, options = {}) {
 
     if (!res.ok) {
         let errorData = {};
+        let errorMessage = `API call failed with status ${res.status}: ${res.statusText}`;
         try {
             errorData = await res.json();
+            errorMessage = `API call failed with status ${res.status}: ${errorData.detail || JSON.stringify(errorData)}`;
         } catch (e) {
+            console.warn("makeAuthenticatedRequest: Could not parse response as JSON.", e);
             // If response is not JSON, use plain text status
-            throw new Error(`API call failed with status ${res.status}: ${res.statusText}`);
         }
-        throw new Error(`API call failed with status ${res.status}: ${errorData.detail || JSON.stringify(errorData)}`);
+        console.error("makeAuthenticatedRequest: Detailed error:", errorData);
+        throw new Error(errorMessage);
     }
 
     return res;
@@ -364,28 +370,32 @@ function bindFollowButtons() {
 async function handleFollowButtonClick(e) {
     const button = e.currentTarget;
     const userId = button.dataset.userId;
-    let isFollowing = button.dataset.isFollowing === 'true';
-
+    const isFollowing = button.classList.contains('following'); 
+    const action = isFollowing ? 'unfollow' : 'follow';
+    
     try {
-        const res = await makeAuthenticatedRequest(`/api/users/${userId}/toggle_follow/`, {
+        console.log(`Attempting to ${action} user ID: ${userId}, current status: ${isFollowing}`);
+        
+        const res = await makeAuthenticatedRequest(`/api/users/${userId}/${action}/`, { 
             method: 'POST',
-            body: JSON.stringify({}) // Empty body for a toggle endpoint
+            headers: { 'Content-Type': 'application/json' }, 
+            body: JSON.stringify({}) 
         });
 
         if (res.ok) {
-            isFollowing = !isFollowing; // Toggle the state
-            button.dataset.isFollowing = isFollowing ? 'true' : 'false';
-            button.textContent = isFollowing ? 'Following' : 'Follow';
-            button.classList.toggle('following', isFollowing);
-            alert(`You are now ${isFollowing ? 'following' : 'unfollowing'} this user.`);
+            // Update UI based on the action
+            button.classList.toggle('following', !isFollowing); // Toggle the 'following' class
+            button.textContent = isFollowing ? 'Follow' : 'Following'; // Change button text
+            console.log(`Follow status toggled successfully for user ID: ${userId}. New status: ${!isFollowing}`);
+            loadUsers(); // This will re-render all users, including updated counts/follow status
         } else {
             const errorData = await res.json().catch(() => ({}));
-            console.error("Failed to toggle follow:", errorData);
-            alert("Failed to toggle follow status.");
+            console.error(`Failed to ${action} (server response not OK):`, res.status, res.statusText, errorData);
+            alert(`Failed to ${action} user. Check console for details.`);
         }
     } catch (err) {
-        console.error("Error toggling follow:", err);
-        alert("An error occurred while changing follow status.");
+        console.error(`Error during ${action} operation (network or JS error):`, err);
+        alert(`An unexpected error occurred while trying to ${action}: ${err.message || err}`);
     }
 }
 

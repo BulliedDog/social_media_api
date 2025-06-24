@@ -32,7 +32,7 @@ function setupPasswordToggle(passwordInputId, toggleButtonId) {
         toggleButton.addEventListener('click', function() {
             const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
             passwordInput.setAttribute('type', type);
-            
+
             const icon = this.querySelector('i');
             if (icon) {
                 icon.classList.toggle('fa-eye');
@@ -277,51 +277,11 @@ function switchToLogin() {
 if (signupLink) { signupLink.addEventListener("click", (e) => { e.preventDefault(); switchToSignup(); }); }
 if (signinLink) { signinLink.addEventListener("click", (e) => { e.preventDefault(); switchToLogin(); }); }
 
+// THIS IS THE CRUCIAL CHANGE:
+// The DOMContentLoaded listener should ONLY set up password toggles on the login page.
+// It should NOT check for tokens or redirect the user.
 document.addEventListener("DOMContentLoaded", () => {
-    const token = localStorage.getItem("accessToken");
-    const successMessage = document.getElementById("successMessage");
-    const loginCard = document.getElementById("loginCard");
-    const signupCard = document.getElementById("signupCard");
-
-    if (token) {
-        // Show success message while checking token
-        successMessage.style.display = "block";
-        loginCard.style.display = "none";
-        signupCard.style.display = "none";
-
-        fetch("/api/user/", {
-            headers: {
-                "Authorization": `Bearer ${token}`
-            }
-        })
-        .then(res => {
-            if (res.ok) {
-                // Valid token, redirect
-                window.location.href = "/social/home/";
-            } else {
-                // Invalid token
-                localStorage.removeItem("accessToken");
-                localStorage.removeItem("refreshToken");
-                localStorage.removeItem("user");
-
-                // Show login form again
-                successMessage.style.display = "none";
-                loginCard.style.display = "block";
-            }
-        })
-        .catch(err => {
-            console.error("Token validation failed:", err);
-            localStorage.removeItem("accessToken");
-            localStorage.removeItem("refreshToken");
-            localStorage.removeItem("user");
-
-            // Show login form again
-            successMessage.style.display = "none";
-            loginCard.style.display = "block";
-        });
-    } else {
-        // No token at all — show login form
-        successMessage.style.display = "none";
-        loginCard.style.display = "block";
-    }
+    setupPasswordToggle('password', 'togglePassword');
+    setupPasswordToggle('signupPassword', 'toggleSignupPassword');
+    setupPasswordToggle('confirmPassword', 'toggleConfirmPassword');
 });
