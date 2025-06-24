@@ -34,7 +34,7 @@ cloudinary.config(
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 #DEBUG = os.getenv("DEBUG", "False") == "True"
-DEBUG = True
+DEBUG = False
 SECRET_KEY = os.getenv("SECRET_KEY", "unsafe-secret-key")
 
 ALLOWED_HOSTS = ["*"]
