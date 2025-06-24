@@ -278,11 +278,50 @@ if (signupLink) { signupLink.addEventListener("click", (e) => { e.preventDefault
 if (signinLink) { signinLink.addEventListener("click", (e) => { e.preventDefault(); switchToLogin(); }); }
 
 document.addEventListener("DOMContentLoaded", () => {
-    setupPasswordToggle('password', 'togglePassword');
-    setupPasswordToggle('signupPassword', 'toggleSignupPassword');
-    setupPasswordToggle('confirmPassword', 'toggleConfirmPassword');
+    const token = localStorage.getItem("accessToken");
+    const successMessage = document.getElementById("successMessage");
+    const loginCard = document.getElementById("loginCard");
+    const signupCard = document.getElementById("signupCard");
 
-    // THIS IS THE CRUCIAL CHANGE:
-    // Removed the token check and redirect from here.
-    // The login page should always allow login, not redirect if a token exists.
+    if (token) {
+        // Show success message while checking token
+        successMessage.style.display = "block";
+        loginCard.style.display = "none";
+        signupCard.style.display = "none";
+
+        fetch("/api/user/", {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        })
+        .then(res => {
+            if (res.ok) {
+                // Valid token, redirect
+                window.location.href = "/social/home/";
+            } else {
+                // Invalid token
+                localStorage.removeItem("accessToken");
+                localStorage.removeItem("refreshToken");
+                localStorage.removeItem("user");
+
+                // Show login form again
+                successMessage.style.display = "none";
+                loginCard.style.display = "block";
+            }
+        })
+        .catch(err => {
+            console.error("Token validation failed:", err);
+            localStorage.removeItem("accessToken");
+            localStorage.removeItem("refreshToken");
+            localStorage.removeItem("user");
+
+            // Show login form again
+            successMessage.style.display = "none";
+            loginCard.style.display = "block";
+        });
+    } else {
+        // No token at all — show login form
+        successMessage.style.display = "none";
+        loginCard.style.display = "block";
+    }
 });
