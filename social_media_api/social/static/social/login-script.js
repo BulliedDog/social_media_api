@@ -282,26 +282,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setupPasswordToggle('signupPassword', 'toggleSignupPassword');
     setupPasswordToggle('confirmPassword', 'toggleConfirmPassword');
 
-    const token = localStorage.getItem("accessToken");
-    if (token) {
-        fetch("/api/user/", {
-            headers: { "Authorization": `Bearer ${token}` }
-        })
-        .then(res => {
-            if (res.ok) {
-                window.location.href = "/social/home/";
-            } else {
-                console.warn("Invalid/expired token found on login page. Clearing local storage.");
-                localStorage.removeItem("accessToken");
-                localStorage.removeItem("refreshToken");
-                localStorage.removeItem("user");
-            }
-        })
-        .catch(err => {
-            console.error("Network issue validating token on login page load:", err);
-            localStorage.removeItem("accessToken");
-            localStorage.removeItem("refreshToken");
-            localStorage.removeItem("user");
-        });
-    }
+    // THIS IS THE CRUCIAL CHANGE:
+    // Removed the token check and redirect from here.
+    // The login page should always allow login, not redirect if a token exists.
 });
